@@ -1,7 +1,8 @@
 library(tidyverse)
 library(plotly)
 getwd()
-train<- read_rds("data/trainSetFactor.rds")
+train<- read.csv("data/train.rds")
+test <- read.csv("data/test.csv")
 
 
 set.seed(1234)
@@ -20,20 +21,43 @@ k <- trainSet %>% nrow() %>%
   sqrt() %>% ceiling
 
 
-fitKnn <- knn(trainSet[ , 1:ncol(train)-1], 
-              testSet[ , 1:ncol(train)-1],
-              cl = trainSet$handName,
+fitKnn <- knn(trainSet[ , 1:10], 
+              testSet[ , 1:10],
+              cl = trainSet$hand,
+              10,
+              prob = TRUE)
+?knn
+fitKnn
+ind_go<-trainSet$hand%in%4:6
+
+
+head(trainSet)
+?knn
+trainSet
+
+
+fitKnn <- knn(trainSet[ , 1:10], 
+              test[ , 2:11],
+              cl = trainSet$hand,
               k,
               prob = TRUE)
 
-?confusionMatrix()
+trainSet[ind_go , 1:10]
+table(fitKnn)
+
+table(trainSet$hand)
 model <- fitKnn
-modelTest <- testSet$handName
-table(model, modelTest) %>% View()
+modelTest <- testSet$hand
+table(model, modelTest) 
 
 library(caret)
 # confusionMatrix(data = model, reference = modelTest) %>% glimpse()
-confusionMatrix(data = model, reference = modelTest)$table %>% View()
+confusionMatrix(data = model, reference = modelTest)
+str(model)
+model
+modelTest
+c$table %>% View()
+?knn
 
 
 library(MLmetrics)
@@ -43,6 +67,7 @@ F1_Score(y_pred = model, y_true = modelTest, positive = "best")
 # Doesn't work due to matrix not being 2x2
 # 
 # library(ROCR)
+
 # 
 # predObj <- prediction(predictions = as.numeric(model),
 #                       labels = as.numeric(modelTest))
@@ -77,4 +102,9 @@ fitKnnW$fitted.values -> predW
 
 confusionMatrix(predW, reference = modelTest, positive = "best")
 F1_Score(y_pred = predW, y_true =  modelTest, positive = "best")
+
+
+
+# one class classifaction (occ) #하나 찾는거 
+
 

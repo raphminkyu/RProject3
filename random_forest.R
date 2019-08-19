@@ -8,7 +8,7 @@ library(ROCR)
 library(pROC)
 
 
-train <- read.csv(file = 'train.csv')
+train <- read.csv(file = 'data/train.csv')
 
 train %>% str()
 train <- train %>% map(as.factor) %>% as.data.frame()
@@ -40,3 +40,4 @@ confusionMatrix(pred, reference = real, positive = '1')
 
 
 F1_Score(y_true = real, y_pred = pred, positive = '1')    # 0.5331337
+

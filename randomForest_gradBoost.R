@@ -23,15 +23,18 @@ train <- train[index == 1,]
 
 train$hand %>% table() %>% prop.table()*100
 test$hand  %>% table() %>% prop.table()*100
-
-
+library(randomForest)
+?randomForest
 fit_random_forest <- randomForest(x = train[,-11], y = train[,11],
                                   xtest = test[,-11], ytest = test[,11],
-                                  ntree = 1000, mtry = 3,
+                                  ntree = 1000, 
+                                  mtry = 3, #try default
                                   importance = TRUE,
                                   do.trace = 50,
                                   keep.forest = TRUE)
 
+
+?predict.randomForest
 pred <- predict(object = fit_random_forest, newdata = test, type = 'response')
 real <- test$hand
 
